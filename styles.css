@@ -1609,6 +1609,11 @@ body.cursor-down #cursor-ring {
     bottom: 1rem;
     right: 1rem;
   }
+
+  #experience .about-title {
+    font-size: clamp(1.7rem, 7vw, 2.2rem);
+    line-height: 1.15;
+  }
 }
 
 @media (min-width: 900px) {
