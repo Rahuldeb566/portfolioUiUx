@@ -20,6 +20,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -28,6 +29,7 @@ body {
   background: var(--bg);
   line-height: 1.6;
   cursor: none;
+  overflow-x: hidden;
 }
 
 body.menu-open {
@@ -238,6 +240,9 @@ nav.scrolled {
   transition: transform 0.3s ease;
   box-shadow: -10px 0 30px rgba(15, 23, 42, 0.3);
   z-index: 999;
+  pointer-events: none;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-close {
@@ -259,6 +264,7 @@ nav.scrolled {
 
 .mobile-menu.open {
   transform: translateX(0);
+  pointer-events: auto;
 }
 
 .mobile-menu a {

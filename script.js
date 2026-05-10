@@ -27,6 +27,10 @@ const mobileClose = mobileMenu.querySelector(".mobile-close");
 let suppressNextToggle = false;
 let pointerStartX = 0;
 let pointerStartY = 0;
+let lastScrollTime = 0;
+let touchStartX = 0;
+let touchStartY = 0;
+let touchMoved = false;
 
 const setMenuState = (isOpen) => {
   mobileMenu.classList.toggle("open", isOpen);
@@ -41,6 +45,9 @@ const closeMenu = () => {
 
 hamburger.addEventListener("click", (event) => {
   event.stopPropagation();
+  if (Date.now() - lastScrollTime < 250) {
+    return;
+  }
   if (suppressNextToggle) {
     suppressNextToggle = false;
     return;
@@ -59,6 +66,30 @@ hamburger.addEventListener("pointermove", (event) => {
   const deltaX = Math.abs(event.clientX - pointerStartX);
   const deltaY = Math.abs(event.clientY - pointerStartY);
   if (deltaX > 8 || deltaY > 8) {
+    suppressNextToggle = true;
+  }
+});
+
+hamburger.addEventListener("touchstart", (event) => {
+  const touch = event.touches[0];
+  if (!touch) return;
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+  touchMoved = false;
+});
+
+hamburger.addEventListener("touchmove", (event) => {
+  const touch = event.touches[0];
+  if (!touch) return;
+  const deltaX = Math.abs(touch.clientX - touchStartX);
+  const deltaY = Math.abs(touch.clientY - touchStartY);
+  if (deltaX > 8 || deltaY > 8) {
+    touchMoved = true;
+  }
+});
+
+hamburger.addEventListener("touchend", () => {
+  if (touchMoved) {
     suppressNextToggle = true;
   }
 });
@@ -232,6 +263,7 @@ window.addEventListener("resize", updateProgress);
 updateProgress();
 
 window.addEventListener("scroll", () => {
+  lastScrollTime = Date.now();
   if (mobileMenu.classList.contains("open")) {
     closeMenu();
   }
