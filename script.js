@@ -23,18 +23,47 @@ window.addEventListener("scroll", () => {
 
 const hamburger = document.getElementById("hamburger");
 const mobileMenu = document.getElementById("mobileMenu");
+const mobileClose = mobileMenu.querySelector(".mobile-close");
+let suppressNextToggle = false;
+let pointerStartX = 0;
+let pointerStartY = 0;
+
+const setMenuState = (isOpen) => {
+  mobileMenu.classList.toggle("open", isOpen);
+  hamburger.classList.toggle("is-open", isOpen);
+  document.body.classList.toggle("menu-open", isOpen);
+  hamburger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+};
 
 const closeMenu = () => {
-  mobileMenu.classList.remove("open");
-  hamburger.setAttribute("aria-expanded", "false");
+  setMenuState(false);
 };
 
 hamburger.addEventListener("click", (event) => {
   event.stopPropagation();
-  mobileMenu.classList.toggle("open");
-  const expanded = mobileMenu.classList.contains("open");
-  hamburger.setAttribute("aria-expanded", expanded ? "true" : "false");
+  if (suppressNextToggle) {
+    suppressNextToggle = false;
+    return;
+  }
+  const expanded = !mobileMenu.classList.contains("open");
+  setMenuState(expanded);
 });
+
+hamburger.addEventListener("pointerdown", (event) => {
+  pointerStartX = event.clientX;
+  pointerStartY = event.clientY;
+  suppressNextToggle = false;
+});
+
+hamburger.addEventListener("pointermove", (event) => {
+  const deltaX = Math.abs(event.clientX - pointerStartX);
+  const deltaY = Math.abs(event.clientY - pointerStartY);
+  if (deltaX > 8 || deltaY > 8) {
+    suppressNextToggle = true;
+  }
+});
+
+mobileClose.addEventListener("click", closeMenu);
 
 document.addEventListener("click", (event) => {
   if (mobileMenu.classList.contains("open") && !mobileMenu.contains(event.target)) {
@@ -201,6 +230,12 @@ const updateProgress = () => {
 window.addEventListener("scroll", updateProgress);
 window.addEventListener("resize", updateProgress);
 updateProgress();
+
+window.addEventListener("scroll", () => {
+  if (mobileMenu.classList.contains("open")) {
+    closeMenu();
+  }
+});
 
 const cursorDot = document.createElement("div");
 cursorDot.id = "cursor-dot";
