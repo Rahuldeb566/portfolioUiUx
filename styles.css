@@ -277,7 +277,7 @@ nav.scrolled {
 .hero-title {
   font-family: "Syne", sans-serif;
   font-weight: 900;
-  font-size: 2.35rem;
+  font-size: clamp(2rem, 9.5vw, 2.6rem);
   line-height: 1.05;
   margin: 1rem 0;
   text-transform: uppercase;
@@ -1579,6 +1579,35 @@ body.cursor-down #cursor-ring {
 
   .footer-bottom {
     flex-direction: row;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-title {
+    font-size: clamp(1.9rem, 10vw, 2.4rem);
+    line-height: 1.08;
+    word-break: break-word;
+  }
+
+  .cta-title {
+    font-size: clamp(2.4rem, 12vw, 3.8rem);
+    line-height: 1.05;
+    word-break: break-word;
+  }
+
+  .hero-visual {
+    height: 360px;
+  }
+
+  .hero-photo-img {
+    object-position: center 12%;
+  }
+
+  .whatsapp-float {
+    width: 56px;
+    height: 56px;
+    bottom: 1rem;
+    right: 1rem;
   }
 }
 
